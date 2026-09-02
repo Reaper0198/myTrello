@@ -1,6 +1,39 @@
 const express = require('express')
+const bcrypt = require('bcrypt');
+const { userModel, taskModel, orgModel } = require('./db');
+const mongoose = require('mongoose')
+
+mongoose.connect('mongodb+srv://kmtyagi_db_user:kmtyagi_db_password@cluster0.z8clgz0.mongodb.net/myTrelloDB')
+.then(()=>{console.log('connected to db...')})
+.catch((err)=> {console.log(err)})
 
 const app = express()
+
+app.use(express.json());
+
+app.post('/signup', async (req, res) => {
+    console.log(req.body);
+    const userName = req.body.userName;
+    const email = req.body.email;
+    const org = req.body.org;
+    const password = req.body.password;
+
+    const hashedPassword = await bcrypt.hash(password, 5);
+
+    const newUser = new userModel({
+        userName,
+        email,
+        org,
+        password : hashedPassword
+    })
+
+    await newUser.save();
+
+    res.status(200).send({
+        status : true,
+        message : "user created successfully"
+    })
+})
 
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
