@@ -35,6 +35,34 @@ app.post('/signup', async (req, res) => {
     })
 })
 
+app.get('/signin', async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try{
+        const user = await userModel.findOne({email});
+        
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if(passwordMatch){
+            res.status(200).send({
+                status : true,
+                messsage : "sign in successfull"
+            })
+        }else{
+            res.status(401).send({
+                status : false,
+                message : "Incorrect email or password"
+            })
+        }
+
+    }catch(err){
+        res.status(401).send({
+            status : false,
+            message : 'sign in failed'
+        })
+    }
+})
+
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
 })
