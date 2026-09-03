@@ -12,7 +12,7 @@ const app = express()
 app.use(express.json());
 
 app.post('/signup', async (req, res) => {
-    console.log(req.body);
+
     const userName = req.body.userName;
     const email = req.body.email;
     const org = req.body.org;
@@ -158,6 +158,54 @@ app.delete('/task/delete/:taskId', async (req, res) => {
         res.status(402).send({
             status : false,
             message : "task was not deleted"
+        })
+    }
+})
+
+// org CRUD operations
+app.post('/admin/org', async (req, res) => {
+    const userName = req.body.userName;
+    const org = req.body.org;
+    const teamName = req.body.teamName;
+
+    try{
+        const newOrg = new orgModel({
+            userName,
+            teamName,
+            org,
+        })
+    
+        await newOrg.save();
+    
+        res.status(200).send({
+            status : true,
+            message : "org created successfully"
+        })
+    }catch(err){
+        res.status(501).send({
+            status : false,
+            message : "could not create the org"
+        })
+    }
+
+})
+
+app.get('/admin/org', async (req, res) => {
+    const userName = req.body.userName;
+
+    try{
+        const orgs = await orgModel.find({userName});
+        
+        res.status(200).send({
+            status : true,
+            payload : orgs,
+            messsage : "orgs fetched successfulyl"
+        })
+
+    }catch(err){
+        res.status(401).send({
+            status : false,
+            message : 'could not fetch orgs'
         })
     }
 })

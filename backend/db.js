@@ -6,6 +6,7 @@ const user = new Schema({
     userName : {
         type : String,
         required : true,
+        unique : true
     },
     email : {
         type : String,
@@ -42,6 +43,10 @@ const task = new Schema({
 })
 
 const org = new Schema({
+    userName :{
+        type : String,
+        required : true
+    },
     orgName : {
         type : String,
         required : true,
