@@ -50,7 +50,6 @@ const org = new Schema({
     teamName : {
         type : String,
         required : true,
-        unique : true
     }
 })
 

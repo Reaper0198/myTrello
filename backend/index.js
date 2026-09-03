@@ -93,6 +93,27 @@ app.post('/task', async(req, res) => {
 
 })
 
+app.get('/task', async (req, res) => {
+    const teamName = req.body.teamName;
+    const org = req.body.org;
+
+    try{
+        const allTask = await taskModel.find({teamName, org});
+
+        res.status(200).send({
+            status : true,
+            payload : allTask,
+            message : "fetched all task successfully"
+        })
+
+    }catch(err){
+        res.send(404).send({
+            status : false,
+            message : "could not fetch the tasks"
+        })
+    }
+})
+
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
 })
