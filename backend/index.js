@@ -63,6 +63,8 @@ app.get('/signin', async (req, res) => {
     }
 })
 
+
+// task CRUD operations
 app.post('/task', async(req, res) => {
 
     const task = req.body.task;
@@ -92,7 +94,7 @@ app.post('/task', async(req, res) => {
     }
 
 })
-
+// ADD MIDDLEWARE TO CHECK IS USER IS AUTHORISED TO DO CRUD 
 app.get('/task', async (req, res) => {
     const teamName = req.body.teamName;
     const org = req.body.org;
@@ -140,6 +142,24 @@ app.put('/task/update/:taskId', async (req, res)=>{
         })
     }
 
+})
+
+app.delete('/task/delete/:taskId', async (req, res) => {
+    const taskId = req.params.taskId;
+
+    try{
+        await taskModel.findOneAndDelete({_id : taskId});
+
+        res.status(200).send({
+            status : true,
+            message : "task deleted successfully"
+        })
+    }catch(err){
+        res.status(402).send({
+            status : false,
+            message : "task was not deleted"
+        })
+    }
 })
 
 app.listen(3000, ()=> {
