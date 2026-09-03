@@ -114,6 +114,34 @@ app.get('/task', async (req, res) => {
     }
 })
 
+app.put('/task/update/:taskId', async (req, res)=>{
+
+    const taskId = req.params.taskId;
+    const task = req.body.task;
+    const status = req.body.status;
+    const teamName = req.body.teamName;
+    const org = req.body.org;
+
+    try{
+        await taskModel.findOneAndReplace({_id :taskId}, 
+            {
+                task, status, teamName, org
+            }
+        )
+        res.status(200).send({
+            status : true,
+            message : "task updated successfully"
+        })
+    }catch(err){
+        console.log('err', err)
+        res.status(501).send({
+            status : false,
+            message : 'could not update the task'
+        })
+    }
+
+})
+
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
 })
