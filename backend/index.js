@@ -63,6 +63,36 @@ app.get('/signin', async (req, res) => {
     }
 })
 
+app.post('/task', async(req, res) => {
+
+    const task = req.body.task;
+    const status = req.body.status;
+    const teamName = req.body.teamName;
+    const org = req.body.org;
+
+    try{
+        const newTask = new taskModel({
+            task,
+            status,
+            teamName,
+            org
+        })
+
+        await newTask.save();
+
+        res.status(200).send({
+            status : true,
+            message : "task created successfully"
+        })
+    }catch(err){
+        res.status(406).send({
+            status : false,
+            message : "could not created the task"
+        })
+    }
+
+})
+
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
 })
