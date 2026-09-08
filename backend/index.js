@@ -165,14 +165,14 @@ app.delete('/task/delete/:taskId', async (req, res) => {
 // org CRUD operations
 app.post('/admin/org', async (req, res) => {
     const userName = req.body.userName;
-    const org = req.body.org;
+    const orgName = req.body.orgName;
     const teamName = req.body.teamName;
 
     try{
         const newOrg = new orgModel({
             userName,
             teamName,
-            org,
+            orgName,
         })
     
         await newOrg.save();
@@ -182,6 +182,7 @@ app.post('/admin/org', async (req, res) => {
             message : "org created successfully"
         })
     }catch(err){
+        console.log('err', err)
         res.status(501).send({
             status : false,
             message : "could not create the org"
@@ -206,6 +207,29 @@ app.get('/admin/org', async (req, res) => {
         res.status(401).send({
             status : false,
             message : 'could not fetch orgs'
+        })
+    }
+})
+
+app.put('/admin/org/:orgId', async (req, res) => {
+    const orgId = req.params.orgId;
+    const orgName = req.body.orgName;
+    const teamName = req.body.teamName;
+    const userName = req.body.userName;
+
+    try{
+        await orgModel.findOneAndReplace({_id : orgId}, {
+            orgName, teamName, userName
+        })
+
+        res.status(200).send({
+            status : true,
+            message : "org data updated successfully"
+        })
+    }catch(err){
+        res.status(400).send({
+            status : false,
+            message : "could not update"
         })
     }
 })
