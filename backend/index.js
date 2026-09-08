@@ -234,6 +234,25 @@ app.put('/admin/org/:orgId', async (req, res) => {
     }
 })
 
+app.delete('/admin/org/:orgId', async (req, res) => {
+    const orgId = req.params.orgId;
+
+    try{
+        await orgModel.findOneAndDelete({_id : orgId})
+
+        res.status(200).send({
+            status : true,
+            message : "org data deleted successfully"
+        })
+    }catch(err){
+        res.status(400).send({
+            status : false,
+            message : "could not delete"
+        })
+    }
+})
+
+
 app.listen(3000, ()=> {
     console.log("server is running on port 3000...")
 })
